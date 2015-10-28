@@ -75,7 +75,6 @@ class GeneralTests(TestCase):
         # Create an instance of a GET request.
         request = self.factory.get('/v1.0/tenantId/')
 
-        # Test my_view() as if it were deployed at /customer/details
         response = self.general.GET(request, "tenantId")
         self.assertEqual(response.status_code, 200)
 
@@ -155,10 +154,17 @@ class WindowSizeTests(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_not_update_window2(self):
-        # Create an instance of a GET request.
+        # Test if fails correctly when tries to update windowsize to a negative integer.
         request = self.factory.put('/v1.0/tenantId/', "{\"windowsize\": -1}", "application/json")
 
-        # Test my_view() as if it were deployed at /customer/details
+        response = self.general.PUT(request, "tenantId")
+        self.assertEqual(response.status_code, 400)
+
+    def test_not_update_window_illegal_string(self):
+        # Test if fails correctly when tries to update windowsize to an illegal string.
+
+        request = self.factory.put('/v1.0/tenantId/', "{\"windowsize\": \"three\"}", "application/json")
+
         response = self.general.PUT(request, "tenantId")
         self.assertEqual(response.status_code, 400)
 
